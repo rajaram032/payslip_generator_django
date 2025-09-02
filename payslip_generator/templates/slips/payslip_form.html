@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3 class="mb-3">Create Payslip</h3>
+
+<form method="post" novalidate>
+  {% csrf_token %}
+
+  <div class="card mb-3">
+    <div class="card-header fw-semibold">Header Details</div>
+    <div class="card-body row g-3">
+      <div class="col-md-4">
+        {{ pform.title.label_tag }} {{ pform.title }}
+      </div>
+      <div class="col-md-4">
+        {{ cform.name.label_tag }} {{ cform.name }}
+      </div>
+      <div class="col-md-4">
+        {{ cform.address.label_tag }} {{ cform.address }}
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header fw-semibold">Payslip & Employee Details</div>
+    <div class="card-body row g-3">
+      <div class="col-md-6">
+        <div class="border rounded p-3">
+          <h6 class="fw-semibold">Payslip Details</h6>
+          <div class="row g-2">
+            <div class="col-6">{{ pform.pay_date.label_tag }} {{ pform.pay_date }}</div>
+            <div class="col-6">{{ pform.working_days.label_tag }} {{ pform.working_days }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="border rounded p-3">
+          <h6 class="fw-semibold">Employee Details</h6>
+          <div class="row g-2">
+            <div class="col-8">{{ eform.name.label_tag }} {{ eform.name }}</div>
+            <div class="col-4">{{ eform.employee_id.label_tag }} {{ eform.employee_id }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header fw-semibold">Salary Details</div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <h6>Earnings</h6>
+          {{ earn_formset.management_form }}
+          <div class="list-group mb-3">
+            {% for form in earn_formset %}
+              <div class="list-group-item">
+                <div class="row g-2 align-items-end">
+                  <div class="col-7">{{ form.title.label_tag }} {{ form.title }}</div>
+                  <div class="col-4">{{ form.amount.label_tag }} {{ form.amount }}</div>
+                  <div class="col-1">{{ form.DELETE }} <small>Del</small></div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <h6>Deductions</h6>
+          {{ ded_formset.management_form }}
+          <div class="list-group mb-3">
+            {% for form in ded_formset %}
+              <div class="list-group-item">
+                <div class="row g-2 align-items-end">
+                  <div class="col-7">{{ form.title.label_tag }} {{ form.title }}</div>
+                  <div class="col-4">{{ form.amount.label_tag }} {{ form.amount }}</div>
+                  <div class="col-1">{{ form.DELETE }} <small>Del</small></div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">{{ pform.footer_amount_words.label_tag }} {{ pform.footer_amount_words }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2">
+    <button class="btn btn-primary" name="preview" value="1">Preview</button>
+    <button class="btn btn-success" name="download" value="1">Save & Download PDF</button>
+  </div>
+</form>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">{{ payslip.title }}</h3>
+    <div>
+      <a href="{% url 'slips:pdf' payslip.pk %}" class="btn btn-outline-primary">Download PDF</a>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <h5 class="fw-semibold">Company</h5>
+          <div>{{ payslip.company.name }}</div>
+          <div class="text-muted">{{ payslip.company.address|linebreaksbr }}</div>
+        </div>
+        <div class="col-md-6">
+          <h5 class="fw-semibold">Employee</h5>
+          <div>{{ payslip.employee.name }}</div>
+          <div>ID: {{ payslip.employee.employee_id }}</div>
+          <div class="mt-2">Pay Date: {{ payslip.pay_date }} | Working Days: {{ payslip.working_days }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">Earnings</div>
+        <ul class="list-group list-group-flush">
+          {% for item in payslip.earnings.all %}
+            <li class="list-group-item d-flex justify-content-between">
+              <span>{{ item.title }}</span><span>{{ item.amount }}</span>
+            </li>
+          {% endfor %}
+          <li class="list-group-item d-flex justify-content-between fw-semibold">
+            <span>Total Earnings</span><span>{{ payslip.total_earnings }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">Deductions</div>
+        <ul class="list-group list-group-flush">
+          {% for item in payslip.deductions.all %}
+            <li class="list-group-item d-flex justify-content-between">
+              <span>{{ item.title }}</span><span>{{ item.amount }}</span>
+            </li>
+          {% endfor %}
+          <li class="list-group-item d-flex justify-content-between fw-semibold">
+            <span>Total Deductions</span><span>{{ payslip.total_deductions }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-3">
+    <div class="card-body d-flex justify-content-between fw-bold">
+      <div>Net Pay</div>
+      <div>{{ payslip.net_pay }}</div>
+    </div>
+  </div>
+
+  {% if payslip.footer_amount_words %}
+  <div class="card mt-3">
+    <div class="card-body">
+      <small class="text-muted">Footer Amount (in words)</small>
+      <div>{{ payslip.footer_amount_words }}</div>
+    </div>
+  </div>
+  {% endif %}
+{% endblock %}

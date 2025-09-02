@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {{ font-family: DejaVu Sans, Arial, sans-serif; }}
+    .row {{ display: flex; gap: 24px; }}
+    .col {{ flex: 1; }}
+    .box {{ border: 1px solid #999; padding: 10px; margin-bottom: 8px; }}
+    .title {{ font-size: 22px; font-weight: 700; margin-bottom: 8px; }}
+    table {{ width: 100%; border-collapse: collapse; }}
+    th, td {{ border: 1px solid #999; padding: 6px; text-align: left; }}
+    .right {{ text-align: right; }}
+  </style>
+</head>
+<body>
+  {% if pdf_error %}
+  <div style="padding:10px;background:#ffefd5;border:1px solid #f0ad4e;">
+    PDF engine not available here. Install <code>xhtml2pdf</code> locally to export as PDF.
+    Error: {{ pdf_error }}
+  </div>
+  {% endif %}
+
+  <div class="title">{{ payslip.title }}</div>
+
+  <div class="row">
+    <div class="col box">
+      <strong>Company</strong><br>
+      {{ payslip.company.name }}<br>
+      {{ payslip.company.address|linebreaksbr }}
+    </div>
+    <div class="col box">
+      <strong>Employee</strong><br>
+      {{ payslip.employee.name }} ({{ payslip.employee.employee_id }})<br>
+      Pay Date: {{ payslip.pay_date }}<br>
+      Working Days: {{ payslip.working_days }}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col box">
+      <strong>Earnings</strong>
+      <table>
+        <tr><th>Title</th><th class="right">Amount</th></tr>
+        {% for i in payslip.earnings.all %}
+          <tr><td>{{ i.title }}</td><td class="right">{{ i.amount }}</td></tr>
+        {% endfor %}
+        <tr><th>Total</th><th class="right">{{ payslip.total_earnings }}</th></tr>
+      </table>
+    </div>
+    <div class="col box">
+      <strong>Deductions</strong>
+      <table>
+        <tr><th>Title</th><th class="right">Amount</th></tr>
+        {% for i in payslip.deductions.all %}
+          <tr><td>{{ i.title }}</td><td class="right">{{ i.amount }}</td></tr>
+        {% endfor %}
+        <tr><th>Total</th><th class="right">{{ payslip.total_deductions }}</th></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="box">
+    <table>
+      <tr><th>Net Pay</th><th class="right">{{ payslip.net_pay }}</th></tr>
+    </table>
+  </div>
+
+  {% if payslip.footer_amount_words %}
+  <div class="box">{{ payslip.footer_amount_words }}</div>
+  {% endif %}
+</body>
+</html>
